@@ -6,12 +6,17 @@ struct MindVaultAIApp: App {
 
     @AppStorage("appearance") private var appearance: String = "system"
 
+    let modelContainer: ModelContainer = {
+        let config = ModelConfiguration(cloudKitDatabase: .automatic)
+        return try! ModelContainer(for: Topic.self, Entry.self, configurations: config)
+    }()
+
     var body: some Scene {
         WindowGroup {
             HomeView()
                 .preferredColorScheme(colorScheme)
         }
-        .modelContainer(for: [Topic.self, Entry.self], cloudKitDatabase: .automatic)
+        .modelContainer(modelContainer)
     }
 
     private var colorScheme: ColorScheme? {
