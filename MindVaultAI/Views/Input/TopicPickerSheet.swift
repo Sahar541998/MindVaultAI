@@ -155,7 +155,9 @@ struct TopicPickerSheet: View {
                     newTopicTitle = suggested
                 }
             }
-        } catch {}
+        } catch {
+            // AI suggestion is non-critical; user can still pick manually
+        }
         isSuggesting = false
     }
 

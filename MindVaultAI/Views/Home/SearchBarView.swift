@@ -26,6 +26,7 @@ struct SearchBarView: View {
                         .foregroundStyle(AppColors.textSecondary)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Clear search")
             }
         }
         .padding(AppTheme.Spacing.itemSpacing)

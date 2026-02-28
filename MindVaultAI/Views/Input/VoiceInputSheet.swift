@@ -34,6 +34,7 @@ struct VoiceInputSheet: View {
                         Image(systemName: "xmark")
                             .foregroundStyle(AppColors.textSecondary)
                     }
+                    .accessibilityLabel("Cancel")
                 }
             }
             .onAppear { speechService.checkAuthorization() }
@@ -155,6 +156,7 @@ struct VoiceInputSheet: View {
             .foregroundStyle(AppColors.textSecondary)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(isTypingMode ? "Switch to speaking" : "Switch to typing")
     }
 
     private var permissionDeniedView: some View {

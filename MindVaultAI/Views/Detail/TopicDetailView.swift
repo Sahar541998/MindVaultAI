@@ -55,7 +55,7 @@ struct TopicDetailView: View {
                                 Button(role: .destructive) {
                                     deleteEntry(entry)
                                 } label: {
-                                    Image(systemName: "xmark")
+                                    Label("Delete entry", systemImage: "xmark")
                                 }
                             }
                         }

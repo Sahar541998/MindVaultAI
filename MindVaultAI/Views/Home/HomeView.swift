@@ -85,7 +85,7 @@ struct HomeView: View {
                                 Button(role: .destructive) {
                                     viewModel.deleteTopic(topic, context: modelContext)
                                 } label: {
-                                    Image(systemName: "xmark")
+                                    Label("Delete topic", systemImage: "xmark")
                                 }
                             }
                         }
