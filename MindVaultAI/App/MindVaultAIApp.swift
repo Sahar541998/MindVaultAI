@@ -11,7 +11,7 @@ struct MindVaultAIApp: App {
             HomeView()
                 .preferredColorScheme(colorScheme)
         }
-        .modelContainer(for: [Topic.self, Entry.self])
+        .modelContainer(for: [Topic.self, Entry.self], cloudKitDatabase: .automatic)
     }
 
     private var colorScheme: ColorScheme? {
