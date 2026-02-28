@@ -28,6 +28,8 @@ Speak or type your thoughts, and let on-device AI automatically categorize them 
 
 • Smart Summaries — Get AI-generated summaries for each topic that evolve as you add more entries.
 
+• Ask AI — Ask questions about your entries and get intelligent, contextual answers powered by Apple Intelligence.
+
 • iCloud Sync — Access your thoughts seamlessly across iPhone and Mac.
 
 • Privacy First — All AI processing happens on-device. No data is ever sent to external servers.

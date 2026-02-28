@@ -7,6 +7,7 @@ Your AI-powered memory layer. Capture thoughts by voice or text, and let on-devi
 - **Voice & Text Input** -- tap the mic to speak, then edit the transcription before saving
 - **AI Topic Suggestions** -- after saving a thought, AI suggests the best matching topic or a new topic name in real-time
 - **AI Summaries** -- each topic gets an AI-generated summary after new entries
+- **Ask AI** -- ask questions about your entries and get contextual answers
 - **Swipe-to-Delete** -- swipe left on topics or individual entries to remove them
 - **iCloud Sync** -- data syncs seamlessly across iPhone and Mac via CloudKit
 - **Dark & Light Mode** -- adaptive theme with full appearance control

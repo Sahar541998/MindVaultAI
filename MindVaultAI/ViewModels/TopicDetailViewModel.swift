@@ -5,6 +5,7 @@ import SwiftData
 final class TopicDetailViewModel {
 
     var isGeneratingSummary = false
+    var isAskingQuestion = false
     var errorMessage: String?
 
     private let aiService = AIService()
@@ -36,6 +37,32 @@ final class TopicDetailViewModel {
             topic.updatedAt = Date()
         } catch {
             errorMessage = "Could not generate summary: \(error.localizedDescription)"
+        }
+    }
+
+    @MainActor
+    func askQuestion(_ question: String, about topic: Topic, context: ModelContext) async {
+        let userEntries = (topic.entries ?? []).filter { !$0.isAISummary && !$0.isAIAnswer }
+        guard !userEntries.isEmpty else {
+            errorMessage = "Add some entries first so the AI has context to work with."
+            return
+        }
+
+        isAskingQuestion = true
+        defer { isAskingQuestion = false }
+
+        do {
+            let answer = try await aiService.askQuestion(question, entries: userEntries)
+            let answerEntry = Entry(
+                text: answer,
+                isAIAnswer: true,
+                question: question,
+                topic: topic
+            )
+            context.insert(answerEntry)
+            topic.updatedAt = Date()
+        } catch {
+            errorMessage = "Could not get answer: \(error.localizedDescription)"
         }
     }
 }

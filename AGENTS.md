@@ -286,7 +286,7 @@ When a task requires manual Xcode work, flag it clearly.
 
 - Topics and user entries support swipe-to-delete via `.swipeActions(edge: .trailing, allowsFullSwipe: true)`
 - **Requires `List` context** -- `.swipeActions` does NOT work in `ScrollView` + `ForEach`
-- AI Summary entries are NOT deletable (no swipe action)
+- All entries (user, AI summary, AI answer) are deletable via swipe
 - Use `.listRowBackground(Color.clear)` and `.listRowSeparator(.hidden)` for custom card styling inside `List`
 
 ### Voice Input Flow
@@ -297,6 +297,14 @@ When a task requires manual Xcode work, flag it clearly.
 4. TopicPickerSheet opens **immediately** -- user sees "Suggesting topic..." while AI works
 5. AI result appears: matched existing topic shown at top, or new topic name pre-filled in Create section
 6. User doesn't have to wait for AI -- they can pick any topic or type a new name immediately
+
+### Ask AI (Q&A)
+
+1. User taps the `questionmark.bubble` icon in the topic detail toolbar
+2. AskAISheet opens with a text field for the question
+3. User types question and taps "Ask" -- all user entries in the topic are sent as context
+4. AI answer is saved as an `Entry` with `isAIAnswer = true` and the original `question` stored
+5. The answer appears in the entries list with a distinct purple "AI ANSWER" badge, showing the question in italics above the answer
 
 ### AI Categorization
 

@@ -8,6 +8,8 @@ struct TopicDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = TopicDetailViewModel()
     @State private var newEntryText = ""
+    @State private var showAskAI = false
+    @State private var questionText = ""
     @FocusState private var isTextFieldFocused: Bool
 
     var body: some View {
@@ -26,6 +28,19 @@ struct TopicDetailView: View {
         } message: {
             Text(viewModel.errorMessage ?? "")
         }
+        .sheet(isPresented: $showAskAI) {
+            AskAISheet(
+                questionText: $questionText,
+                isAsking: viewModel.isAskingQuestion,
+                onSubmit: { question in
+                    Task {
+                        await viewModel.askQuestion(question, about: topic, context: modelContext)
+                        questionText = ""
+                        showAskAI = false
+                    }
+                }
+            )
+        }
     }
 
     private var entriesList: some View {
@@ -40,6 +55,13 @@ struct TopicDetailView: View {
             Section {
                 if viewModel.isGeneratingSummary {
                     ProgressView("Generating AI summary...")
+                        .padding()
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                }
+
+                if viewModel.isAskingQuestion {
+                    ProgressView("Thinking...")
                         .padding()
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
@@ -117,12 +139,21 @@ struct TopicDetailView: View {
     private var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
             if AIService.isAvailable {
-                Button(action: { Task { await generateSummary() } }) {
-                    Image(systemName: "sparkles")
-                        .foregroundStyle(AppColors.accentTeal)
+                HStack(spacing: 16) {
+                    Button(action: { showAskAI = true }) {
+                        Image(systemName: "questionmark.bubble")
+                            .foregroundStyle(AppColors.accentPurple)
+                    }
+                    .disabled(viewModel.isAskingQuestion)
+                    .accessibilityLabel("Ask AI a question")
+
+                    Button(action: { Task { await generateSummary() } }) {
+                        Image(systemName: "sparkles")
+                            .foregroundStyle(AppColors.accentTeal)
+                    }
+                    .disabled(viewModel.isGeneratingSummary)
+                    .accessibilityLabel("Generate AI summary")
                 }
-                .disabled(viewModel.isGeneratingSummary)
-                .accessibilityLabel("Generate AI summary")
             }
         }
     }

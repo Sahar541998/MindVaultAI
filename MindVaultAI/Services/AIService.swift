@@ -86,6 +86,32 @@ final class AIService {
         return .newTopicSuggestion(suggestedTitle: "")
     }
 
+    // MARK: - Ask Question
+
+    private static let questionInstructions = """
+    You are a helpful assistant. The user has a collection of personal notes/entries \
+    on a specific topic. Given those entries as context, answer the user's question \
+    thoughtfully and concisely. Base your answer on the provided entries. \
+    If the entries don't contain enough information, say so honestly. \
+    Do not add any preamble or labels -- just the answer.
+    """
+
+    func askQuestion(_ question: String, entries: [Entry]) async throws -> String {
+        let session = LanguageModelSession(instructions: Self.questionInstructions)
+        let entriesText = entries
+            .filter { !$0.isAISummary && !$0.isAIAnswer }
+            .sorted { $0.createdAt < $1.createdAt }
+            .map { $0.text }
+            .joined(separator: "\n- ")
+
+        let prompt = "Entries:\n- \(entriesText)\n\nQuestion: \(question)"
+        isProcessing = true
+        defer { isProcessing = false }
+
+        let response = try await session.respond(to: prompt)
+        return response.content
+    }
+
     // MARK: - Suggest Icon
 
     private static let iconInstructions = """
