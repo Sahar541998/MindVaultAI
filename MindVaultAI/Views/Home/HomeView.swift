@@ -13,7 +13,10 @@ struct HomeView: View {
         NavigationSplitView {
             sidebarContent
                 .navigationTitle("")
-                .toolbar { toolbarItems }
+                #if os(iOS)
+                .navigationBarHidden(true)
+                #endif
+                .toolbar(.hidden)
         } detail: {
             Text("Select a topic")
                 .foregroundStyle(AppColors.textSecondary)
@@ -108,20 +111,36 @@ struct HomeView: View {
     }
 
     private var headerView: some View {
-        VStack(alignment: .leading, spacing: AppTheme.Spacing.tinySpacing) {
-            HStack(spacing: AppTheme.Spacing.smallSpacing) {
-                Image(systemName: "brain.head.profile")
-                    .font(.title2)
-                    .foregroundStyle(AppColors.accentTeal)
-                Text("MindVaultAI")
-                    .font(AppTheme.Fonts.appTitle)
-                    .foregroundStyle(AppColors.textPrimary)
+        VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                Button(action: { showSettings = true }) {
+                    Image(systemName: "gearshape")
+                        .font(.title2)
+                        .foregroundStyle(AppColors.textSecondary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Settings")
             }
-            Text("Your AI-powered memory layer")
-                .font(AppTheme.Fonts.appSubtitle)
-                .foregroundStyle(AppColors.textSecondary)
+
+            VStack(spacing: 6) {
+                HStack(spacing: AppTheme.Spacing.smallSpacing) {
+                    Image(systemName: "brain.head.profile")
+                        .font(.title)
+                        .foregroundStyle(AppColors.accentTeal)
+                    Text("MindVault AI")
+                        .font(AppTheme.Fonts.appTitle)
+                        .foregroundStyle(AppColors.textPrimary)
+                }
+                Text("Your AI-powered memory layer")
+                    .font(AppTheme.Fonts.appSubtitle)
+                    .foregroundStyle(AppColors.textSecondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.top, 16)
         }
-        .padding(.top, 4)
+        .padding(.top, 8)
+        .padding(.bottom, 12)
     }
 
     private var micButton: some View {
@@ -139,16 +158,6 @@ struct HomeView: View {
         .accessibilityLabel("Record a new thought")
     }
 
-    @ToolbarContentBuilder
-    private var toolbarItems: some ToolbarContent {
-        ToolbarItem(placement: .primaryAction) {
-            Button(action: { showSettings = true }) {
-                Image(systemName: "gearshape")
-                    .foregroundStyle(AppColors.textSecondary)
-            }
-            .accessibilityLabel("Settings")
-        }
-    }
 }
 
 #Preview("With Topics") {
