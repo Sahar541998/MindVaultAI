@@ -47,4 +47,4 @@ Any updates to this Privacy Policy will be reflected in the App and on this page
 
 ## Contact
 
-If you have questions about this Privacy Policy, contact the developer at: sahar541998@gmail.com
+If you have questions about this Privacy Policy, contact the developer at le.sahar@gmail.com or open an issue on the [GitHub repository](https://github.com/Sahar541998/MindVaultAI).
