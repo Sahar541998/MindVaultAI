@@ -48,8 +48,12 @@ struct VoiceInputSheet: View {
                 }
             }
         }
+        #if os(iOS)
         .presentationDetents([.fraction(0.4), .medium])
         .presentationDragIndicator(.visible)
+        #else
+        .frame(minWidth: 420, idealWidth: 480, minHeight: 340, idealHeight: 400)
+        #endif
         .presentationBackground(AppColors.background)
     }
 

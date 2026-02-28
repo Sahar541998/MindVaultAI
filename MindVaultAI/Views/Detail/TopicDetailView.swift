@@ -79,6 +79,15 @@ struct TopicDetailView: View {
                                 Label("Delete entry", systemImage: "xmark")
                             }
                         }
+                        #if os(macOS)
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                deleteEntry(entry)
+                            } label: {
+                                Label("Delete Entry", systemImage: "trash")
+                            }
+                        }
+                        #endif
                 }
             }
 
@@ -115,6 +124,9 @@ struct TopicDetailView: View {
                     .textFieldStyle(.plain)
                     .focused($isTextFieldFocused)
                     .lineLimit(1...4)
+                    #if os(macOS)
+                    .onSubmit { submitEntry() }
+                    #endif
 
                 Button(action: submitEntry) {
                     Image(systemName: "arrow.up.circle.fill")

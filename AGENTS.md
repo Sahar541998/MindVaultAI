@@ -87,6 +87,43 @@ try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
 #endif
 ```
 
+### macOS-Specific Patterns
+
+**Sheet sizing**: `.presentationDetents` does NOT work on macOS. Use `#if os(iOS)` for detents and `#if os(macOS)` with `.frame(minWidth:idealWidth:minHeight:idealHeight:)` for proper sheet sizing.
+
+```swift
+#if os(iOS)
+.presentationDetents([.medium, .large])
+#else
+.frame(minWidth: 420, idealWidth: 480, minHeight: 380, idealHeight: 460)
+#endif
+```
+
+**Deletion**: Swipe-to-delete does not work on macOS (no touch screen). Add `#if os(macOS)` context menus alongside swipe actions:
+
+```swift
+.swipeActions(edge: .trailing, allowsFullSwipe: true) {
+    Button(role: .destructive) { delete(item) } label: { Label("Delete", systemImage: "xmark") }
+}
+#if os(macOS)
+.contextMenu {
+    Button(role: .destructive) { delete(item) } label: { Label("Delete", systemImage: "trash") }
+}
+#endif
+```
+
+**Sidebar toggle**: On macOS, do NOT hide the toolbar on the sidebar -- the system needs it for the sidebar collapse/expand toggle. Guard `.toolbar(.hidden)` with `#if os(iOS)`.
+
+**TextField submit**: On macOS, add `.onSubmit` to text fields so Enter sends the input (on iOS the keyboard provides its own submit button):
+
+```swift
+#if os(macOS)
+.onSubmit { submitEntry() }
+#endif
+```
+
+**NavigationSplitView column width**: Set sidebar width on macOS with `.navigationSplitViewColumnWidth(min:ideal:max:)` and use `.navigationSplitViewStyle(.balanced)` for proportional resizing.
+
 ## SwiftUI Best Practices
 
 - **Small composable views**: if a View body exceeds ~40 lines, extract child views
@@ -282,11 +319,11 @@ When a task requires manual Xcode work, flag it clearly.
 
 ## User Interaction Patterns
 
-### Swipe-to-Delete
+### Deletion
 
-- Topics and user entries support swipe-to-delete via `.swipeActions(edge: .trailing, allowsFullSwipe: true)`
-- **Requires `List` context** -- `.swipeActions` does NOT work in `ScrollView` + `ForEach`
-- All entries (user, AI summary, AI answer) are deletable via swipe
+- **iOS**: Swipe-to-delete via `.swipeActions(edge: .trailing, allowsFullSwipe: true)` -- requires `List` context
+- **macOS**: Right-click context menu via `.contextMenu` (guarded with `#if os(macOS)`)
+- All entries (user, AI summary, AI answer) and topics are deletable
 - Use `.listRowBackground(Color.clear)` and `.listRowSeparator(.hidden)` for custom card styling inside `List`
 
 ### Voice Input Flow
@@ -328,3 +365,7 @@ Before declaring any code complete, verify:
 8. [ ] All SwiftData properties have default values; relationships are optional
 9. [ ] `.swipeActions` is only used inside `List`, never in `ScrollView` + `ForEach`
 10. [ ] `.listStyle(.insetGrouped)` is guarded with `#if os(iOS)`
+11. [ ] `.presentationDetents` is guarded with `#if os(iOS)`, macOS sheets use `.frame()` sizing
+12. [ ] `.toolbar(.hidden)` on sidebar is guarded with `#if os(iOS)` (macOS needs toolbar for sidebar toggle)
+13. [ ] Deletable items have both `.swipeActions` (iOS) and `.contextMenu` (macOS)
+14. [ ] macOS text fields that should submit on Enter have `#if os(macOS) .onSubmit { ... } #endif`

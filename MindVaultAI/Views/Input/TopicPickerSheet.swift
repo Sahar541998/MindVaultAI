@@ -45,7 +45,11 @@ struct TopicPickerSheet: View {
             }
             .task { await suggestTopic() }
         }
+        #if os(iOS)
         .presentationDetents([.medium, .large])
+        #else
+        .frame(minWidth: 420, idealWidth: 480, minHeight: 380, idealHeight: 460)
+        #endif
     }
 
     // MARK: - AI Suggestion Section

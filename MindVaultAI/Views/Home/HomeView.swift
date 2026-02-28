@@ -8,19 +8,24 @@ struct HomeView: View {
     @State private var viewModel = HomeViewModel()
     @State private var showVoiceInput = false
     @State private var showSettings = false
+    @State private var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
 
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             sidebarContent
                 .navigationTitle("")
                 #if os(iOS)
                 .navigationBarHidden(true)
-                #endif
                 .toolbar(.hidden)
+                #endif
+                #if os(macOS)
+                .navigationSplitViewColumnWidth(min: 260, ideal: 320, max: 420)
+                #endif
         } detail: {
             Text("Select a topic")
                 .foregroundStyle(AppColors.textSecondary)
         }
+        .navigationSplitViewStyle(.balanced)
         .sheet(isPresented: $showVoiceInput) {
             VoiceInputSheet()
         }
@@ -91,6 +96,15 @@ struct HomeView: View {
                                     Label("Delete topic", systemImage: "xmark")
                                 }
                             }
+                            #if os(macOS)
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    viewModel.deleteTopic(topic, context: modelContext)
+                                } label: {
+                                    Label("Delete Topic", systemImage: "trash")
+                                }
+                            }
+                            #endif
                         }
                     }
                 }
