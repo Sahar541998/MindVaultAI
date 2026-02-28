@@ -31,12 +31,6 @@ final class TopicDetailViewModel {
 
         do {
             let summary = try await aiService.summarize(entries: userEntries)
-
-            let existing = (topic.entries ?? []).filter { $0.isAISummary }
-            for old in existing {
-                context.delete(old)
-            }
-
             let summaryEntry = Entry(text: summary, isAISummary: true, topic: topic)
             context.insert(summaryEntry)
             topic.updatedAt = Date()

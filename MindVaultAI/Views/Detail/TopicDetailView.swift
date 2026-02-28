@@ -51,12 +51,10 @@ struct TopicDetailView: View {
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            if !entry.isAISummary {
-                                Button(role: .destructive) {
-                                    deleteEntry(entry)
-                                } label: {
-                                    Label("Delete entry", systemImage: "xmark")
-                                }
+                            Button(role: .destructive) {
+                                deleteEntry(entry)
+                            } label: {
+                                Label("Delete entry", systemImage: "xmark")
                             }
                         }
                 }
